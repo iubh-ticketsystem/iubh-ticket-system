@@ -1,0 +1,12 @@
+form {
+    margin-top: 3%;
+}
+
+mat-form-field {
+    width:300px;
+}
+
+textarea {
+    background-color:white;
+    opacity: 0.6;
+}

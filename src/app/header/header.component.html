@@ -1,0 +1,20 @@
+<mat-toolbar color="primary">
+  <div class="logo">
+  </div>
+  <div fxFlex fxLayout fxLayoutAlign="center center">
+    <ul fxLayout fxLayoutGap="20px" fxLayoutAlign="space-evenly" class="navigation-items">
+      <li *ngIf="isAuth$ | async">
+        <a routerLink="/ticketformular">Ticket schreiben</a></li>
+      <li *ngIf="(isAuth$ | async) && auth.canEdit(user)">
+        <a routerLink="/tickets">Tickets anzeigen</a></li>
+      <li *ngIf="(isAuth$ | async) && !(auth.canEdit(user))">
+        <a routerLink="/tickets">Meine Tickets anzeigen</a></li>
+      <li *ngIf="!(isAuth$ | async)">
+        <a routerLink="/">Registrieren</a></li>
+      <li *ngIf="!(isAuth$ | async)">
+        <a routerLink="/login">Login</a></li>
+      <li *ngIf="isAuth$ | async">
+        <a style="cursor:pointer" (click)="onLogout()">Logout</a></li>
+    </ul>
+  </div>
+</mat-toolbar>

@@ -1,0 +1,23 @@
+form {
+    margin-top: 3%;
+}
+
+section{
+    margin-bottom: 3%;
+}
+
+mat-form-field {
+    width:300px;
+    padding-bottom: 20px;
+}
+
+.titel {
+    padding-top: 20px;
+    text-align: center;
+    font-size: 2rem;
+    color: rgb(117, 169, 141);   
+}
+
+button {
+    margin-top: 2%;
+}

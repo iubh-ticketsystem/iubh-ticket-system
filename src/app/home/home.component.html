@@ -1,0 +1,46 @@
+<ng-container *ngIf="(auth.user | async) || {} as user">
+  <section>
+    <h1 class="titel">Registrierung</h1>
+    <form
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxLayoutGap="10px"
+      *ngIf="!user.uid"
+      [formGroup]="signupForm"
+      (ngSubmit)="signup()">
+      <mat-form-field>
+        <input
+          type="email"
+          matInput
+          placeholder="Deine Email"
+          formControlName="email">
+        <mat-hint>Bitte eine korrekte Email eintragen.</mat-hint>
+        <mat-error>Falsche oder fehlende Email.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          type="password"
+          matInput
+          placeholder="Wähle ein Passwort"
+          formControlName="password">
+        <mat-hint>Das Passwort muss zwischen 6 und 24 Zeichen beinhalten.</mat-hint>
+        <mat-error>Fehlendes Passwort.</mat-error>
+      </mat-form-field>
+      <button type="submit" mat-raised-button color="primary" [disabled]="!signupForm.valid">Registrieren</button>
+    </form>
+  </section>
+  
+ <!--    <h3> Registrieren </h3>
+    <label for="username">Benutzername</label>
+    <input type="text" formControlName="username"> -->
+
+ <!--  <form [formGroup]="dataForm" *ngIf="user.uid && !user.username" (ngSubmit)="setUserData(user)">
+    <h3> Registrieren </h3>
+    <label for="username">Benutzername</label>
+    <input type="text" formControlName="username">
+    <button type="submit" [disabled]="!dataForm.valid">Submit</button>
+  </form> -->
+
+
+
+</ng-container>

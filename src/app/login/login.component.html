@@ -1,0 +1,39 @@
+<section>
+  <div ngClass.gt-xs="box">
+  <h1 class="titel">Anmeldung</h1>
+  <form
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayoutGap="10px"
+    [formGroup]="loginForm"
+    (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input
+        type="email"
+        matInput
+        placeholder="Deine Email"
+        formControlName="email">
+      <mat-hint>Bitte deine Email eingeben.</mat-hint>
+      <mat-error>Falsche oder fehlende Email.</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="password"
+        matInput
+        placeholder="Dein Passwort"
+        formControlName="password">
+      <mat-hint>Bitte dein Passwort eingeben.</mat-hint>
+      <mat-error>Fehlendes Passwort.</mat-error>
+      <span>
+        <mat-icon matTooltip="Sollten Sie Ihr Passwort vergessen haben, schreiben Sie bitte eine Email an 
+        fallstudie.iubh@gmail.com mit dem Inhalt der Email Adresse, die für die Registrierung verwendet wurde."
+        matTooltipPosition="left" class="help-position" >help outline</mat-icon>
+      </span>
+    </mat-form-field>
+    <span>
+      <a routerLink="">Noch kein Account? Hier Registrieren</a>
+    </span>
+    <button matTooltip="Ohne Registrierung ist kein Login möglich" type="submit" mat-raised-button color="primary" [disabled]="loginForm.invalid">Login</button>
+  </form>
+  </div>
+</section>

@@ -1,0 +1,130 @@
+<ng-container *ngIf="(tickets$ | async); let tickets; else Loading">
+  <div class="ticket-main" *ngIf="tickets.length>0; else noTickets">
+    <mat-form-field *ngIf="auth.canEdit(user)" id="filter">
+    <mat-select placeholder="Kategorie wählen" [(ngModel)]="this.selectedCategory" name="kategorie"  >
+      <mat-option *ngFor="let kategorie of categories" [value]="kategorie.value">
+        {{ kategorie.value }}
+      </mat-option>
+    </mat-select>
+    </mat-form-field>
+    <mat-tab-group class="tabNav">
+      <mat-tab label="Offen">
+    <ul *ngFor="let ticket of tickets">
+        <mat-card *ngIf="ticket.status == 'offen' && (this.selectedCategory == ticket.kategorie || this.selectedCategory == undefined || this.selectedCategory == '-')">
+          <mat-card-title>Betreff: {{ticket.betreff }}</mat-card-title>
+          <button matTooltip="Ticket als 'Beantwortet' archivieren" *ngIf="auth.canEdit(user)" class="ticket-close" mat-fab color="primary" (click)="closeTicket($event, ticket)">Close</button>
+          <mat-card-subtitle>Datum: {{ticket.datum | date:'medium'}}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="auth.canEdit(user)">Kategorie:
+            <mat-form-field class="changeCategory">
+              <mat-select [(ngModel)]="ticket.kategorie" name="kategorie"  >
+                <mat-option *ngFor="let kategorie of categoriesTicket" [value]="kategorie.value">
+                   {{ kategorie.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-card-subtitle>
+          <mat-card-subtitle *ngIf="!auth.canEdit(user)">Kategorie: {{ticket.kategorie}}</mat-card-subtitle>
+          <mat-card-subtitle>Status: {{ticket.status}}</mat-card-subtitle>
+          <mat-card-content>
+            <p>Student: {{ticket.text}}</p>
+            <div *ngIf="ticket.antwort">
+            <hr>
+            <p> {{ticket.antwortdatum | date:'medium' }} IUBH-Support: {{ticket.antwort}}</p>
+            </div>
+            <hr>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button *ngIf="auth.canEdit(user)" (click)="answerTicket($event, ticket)">Antworten</button>
+            <button mat-button *ngIf="auth.canDelete(user)" (click)="deleteTicket($event, ticket)">Löschen</button>
+          </mat-card-actions>
+        </mat-card>
+
+      <div *ngIf="answerState && ticketToAnswer.ticketId == ticket.ticketId">
+          <form #f="ngForm" (ngSubmit)="updateTicket(ticket)">
+            <mat-form-field>
+                  <textarea type="text" matInput placeholder="Antwort" matTextareaAutosize matAutosizeMinRows="4"
+                            [(ngModel)]="ticket.antwort" name="anwort" maxlength="1200" #antwortInput="ngModel"></textarea>
+              <mat-hint align="end">{{ antwortInput.value?.length }} / 1200</mat-hint>
+            </mat-form-field>
+            <button type="submit" mat-raised-button color="primary" [disabled]="f.invalid">Submit</button>
+          </form>
+        </div>
+    </ul>
+      </mat-tab>
+      <mat-tab label="in Bearbeitung" class="tabNav">
+        <ul *ngFor="let ticket of tickets">
+        <mat-card *ngIf="ticket.status == 'in Bearbeitung' && (this.selectedCategory == ticket.kategorie || this.selectedCategory == undefined || this.selectedCategory == '-')">
+          <button matTooltip="Ticket als 'Beantwortet' archivieren" *ngIf="auth.canEdit(user)" class="ticket-close" mat-fab color="primary" (click)="closeTicket($event, ticket)">Close</button>
+          <mat-card-title>Betreff: {{ticket.betreff }}</mat-card-title>
+          <mat-card-subtitle>Datum: {{ticket.datum | date:'medium'}}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="auth.canEdit(user)">Kategorie:
+              <mat-form-field class="changeCategory">
+                <mat-select [(ngModel)]="ticket.kategorie" name="kategorie"  >
+                  <mat-option *ngFor="let kategorie of categoriesTicket" [value]="kategorie.value">
+                    {{ kategorie.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-card-subtitle>
+          <mat-card-subtitle *ngIf="!auth.canEdit(user)">Kategorie: {{ticket.kategorie}}</mat-card-subtitle>
+          <mat-card-subtitle>Status: {{ticket.status}}</mat-card-subtitle>
+          <mat-card-content>
+            <p>Student: {{ticket.text}}</p>
+            <div *ngIf="ticket.antwort">
+            <hr>
+            <p>{{ticket.antwortdatum | date:'medium' }} IUBH-Support: {{ticket.antwort}}</p>
+            </div>
+            <hr>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button *ngIf="auth.canEdit(user)" (click)="answerTicket($event, ticket)">Antworten</button>
+            <button mat-button *ngIf="auth.canDelete(user)" (click)="deleteTicket($event, ticket)">Löschen</button>
+          </mat-card-actions>
+        </mat-card>
+
+        <div *ngIf="answerState && ticketToAnswer.ticketId == ticket.ticketId">
+          <form #f="ngForm" (ngSubmit)="updateTicket(ticket)">
+            <mat-form-field>
+                  <textarea type="text" matInput placeholder="Antwort" matTextareaAutosize matAutosizeMinRows="4"
+                            [(ngModel)]="ticket.antwort" name="anwort" maxlength="1200" #antwortInput="ngModel"></textarea>
+              <mat-hint align="end">{{ antwortInput.value?.length }} / 1200</mat-hint>
+            </mat-form-field>
+            <button type="submit" mat-raised-button color="primary" [disabled]="f.invalid">Submit</button>
+          </form>
+        </div>
+      </ul></mat-tab>
+      <mat-tab label="Beantwortet" class="tabNav">
+          <ul *ngFor="let ticket of tickets">
+          <mat-card *ngIf="ticket.status == 'beantwortet' && (this.selectedCategory == ticket.kategorie || this.selectedCategory == undefined || this.selectedCategory == '-')">
+            <button matTooltip="Ticket Status wieder in Bearbeitung setzen" *ngIf="auth.canEdit(user)" class="ticket-close" mat-fab color="primary" (click)="reopenTicket($event, ticket)">ReOpen</button>
+            <mat-card-title>Betreff: {{ticket.betreff }}</mat-card-title>
+            <mat-card-subtitle>Datum: {{ticket.datum | date:'medium'}}</mat-card-subtitle>
+            <mat-card-subtitle>Kategorie: {{ticket.kategorie}}</mat-card-subtitle>
+            <mat-card-subtitle>Status: {{ticket.status}}</mat-card-subtitle>
+            <mat-card-content>
+              <p>Student: {{ticket.text}}</p>
+              <div *ngIf="ticket.antwort">
+              <hr>
+              <p>{{ticket.antwortdatum | date:'medium' }} IUBH-Support: {{ticket.antwort}}</p>
+              </div>
+              <hr>
+            </mat-card-content>
+          </mat-card>
+        </ul></mat-tab>
+    </mat-tab-group>
+  </div>
+</ng-container>
+
+<ng-template #noTickets>
+  <h5>Es befinden sich keine Tickets in der Datenbank</h5>
+</ng-template>
+
+<ng-template #Loading>
+  <div class="loading-indicator">
+  <mat-progress-spinner
+    color="primary"
+    mode="indeterminate"
+    value="value">
+  </mat-progress-spinner>
+  </div>
+</ng-template>

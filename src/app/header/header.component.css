@@ -1,0 +1,23 @@
+a {
+  text-decoration: none;
+  color: white;
+}
+  
+a:hover,
+a:active {
+  color: lightgray;
+}
+  
+.navigation-items {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.logo {
+  background: url('../../assets/images/iubh-logo.PNG') no-repeat center;
+  min-width: 140px;
+  height: 64px;
+  margin-left: -20px;
+}

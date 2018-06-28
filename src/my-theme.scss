@@ -1,0 +1,21 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$iubh-app-primary: mat-palette($mat-teal);
+$iubh-app-accent:  mat-palette($mat-light-blue, A200, A100, A400);
+
+$iubh-app-warn:    mat-palette($mat-deep-orange);
+
+$iubh-app-theme: mat-light-theme($iubh-app-primary, $iubh-app-accent, $iubh-app-warn);
+
+@include angular-material-theme($iubh-app-theme);
+
+.success {
+    background-color: rgba(45, 208, 137, 0.768);
+}
+
+.error {
+    background-color: rgba(249, 22, 22, 0.823);
+}
+
